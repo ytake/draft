@@ -13,7 +13,7 @@ func HTTPVndErrorResponse(c echo.Context) error {
 	code := http.StatusNotFound
 	pe := payload.NewError()
 	return c.JSON(code, pe.VngErrorFactory(
-		"Not Found.",
+		"not found.",
 		payload.VndRequestURI(c.Request().RequestURI),
 		payload.VndAboutURI(c.Request().RequestURI)),
 	)

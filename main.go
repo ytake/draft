@@ -8,6 +8,7 @@ import (
 	gommonlog "github.com/labstack/gommon/log"
 	"github.com/ytake/draft/action"
 	"github.com/ytake/draft/config"
+	"github.com/ytake/draft/record"
 	"log"
 	"os"
 	"os/signal"
@@ -23,8 +24,17 @@ func main() {
 		AllowOrigins: config.AllowedOrigins(),
 	}))
 	c := config.NewConfig()
-	h := &action.Handle{}
+	r, err := config.Parse(c.File)
+	if err != nil {
+		e.Logger.Fatal()
+	}
+
+	h := &action.Handle{
+		Documenter: record.NewRecorder(r),
+	}
 	e.GET("/ping", h.Ping)
+	e.POST("/documents", h.AddDocument)
+	e.GET("/documents", h.FindDocument)
 
 	// graceful
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
