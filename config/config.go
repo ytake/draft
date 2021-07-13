@@ -10,24 +10,20 @@ const (
 )
 
 type (
-	// Bootstrapper for app server option
-	Bootstrapper interface {
-		PortOption() string
-	}
 	// Config for port
 	Config struct {
 		Port string
+		File string
 	}
 )
 
 // NewConfig make config
 func NewConfig() *Config {
-	return &Config{portOption()}
-}
-
-// BootOption server port
-func portOption() string {
 	port := flag.Int("port", DefaultPort, "specified HTTP server port")
+	file := flag.String("config", "", "specify the toml file")
 	flag.Parse()
-	return strconv.Itoa(*port)
+	return &Config{
+		Port: strconv.Itoa(*port),
+		File: *file,
+	}
 }
